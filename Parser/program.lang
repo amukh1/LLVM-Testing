@@ -1,0 +1,21 @@
+let a = 5;
+let b = 10;
+
+if(a > b) { print(a); }
+
+if(a < b) { print(b); }
+
+if(a == b) { print("Equal!"); }
+
+function nprint(a) { print(a); }
+
+nprint("Hello World!");
+
+fun add(a, b) { return a + b; }
+
+nprint(add(5, 10));
+
+while (a < 10) {
+    nprint(a);
+    a = a + 1;
+}

@@ -1,0 +1,20 @@
+#include <string>
+#include <vector>
+#include <map>
+#include <llvm/IR/Module.h>
+#include "llvm/IR/IRBuilder.h"
+#include <llvm/Support/raw_ostream.h>
+
+using namespace llvm;
+
+int main() {
+//	static std::unique_ptr<LLVMContext> TheContext;
+//	static std::unique_ptr<IRBuilder<>> Builder(TheContext);
+//	static std::unique_ptr<Module> TheModule;
+//	static std::map<std::string, Value *> NamedValues;
+ llvm::LLVMContext ctx;
+ auto module = std::make_unique<llvm::Module>("amukh", ctx);
+//static std::unique_ptr<IRBuilder<>> Builder(TheContext); static std::unique_ptr<IRBuilder<auto>> Builder(ctx);
+ llvm::outs() << *module << '\n';
+
+}
