@@ -30,8 +30,7 @@ class LLVMController {
     // functions
     llvm::Function* declareFunction(std::string name, llvm::FunctionType* type);
     llvm::BasicBlock* defineFunction(std::string name);
-
-    void verifyFunction(llvm::Function& fn);
+    
     void callFunction(llvm::Function* fn, std::vector<llvm::Value*> args);
 
     // llvm::Value* getFromScope(std::string name);
