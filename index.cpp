@@ -4,8 +4,9 @@
 
 #include <llvm/IR/LLVMContext.h>
 #include <llvm/IR/Module.h>
-#include "llvm/IR/IRBuilder.h"
+#include <llvm/IR/IRBuilder.h>
 #include <llvm/IR/Verifier.h>
+#include <llvm/IR/Instructions.h>
 #include <llvm/Support/raw_ostream.h>
 
 #include <iostream>
@@ -44,10 +45,16 @@ int main() {
  llvm::BasicBlock* entry = Controller.defineFunction("main");
  Controller.builder->SetInsertPoint(entry);
 
- auto string = Controller.builder->CreateGlobalStringPtr("Hello World!\n");
+ auto string = Controller.builder->CreateGlobalStringPtr("Hello World! Almost %d years of programming!\n");
  auto printfn = Controller.module->getFunction("printf");
- 
- Controller.builder->CreateCall(printfn, string);
+
+ llvm::Type *type = llvm::Type::getInt32Ty(Controller.ctx);
+ llvm::AllocaInst* llvm_alloca_inst = Controller.builder->CreateAlloca(Controller.builder->getInt32Ty(), nullptr, "a");
+ llvm::StoreInst* llvm_store_inst = Controller.builder->CreateStore(Controller.builder->getInt32(5), llvm_alloca_inst);
+ // get value ptr
+llvm::LoadInst* llvm_load_inst = Controller.builder->CreateLoad(Controller.builder->getInt32Ty(),llvm_alloca_inst, "a");
+
+ Controller.builder->CreateCall(printfn, {string, llvm_load_inst});
  string->setName("string");
 
  Controller.builder->CreateRet(Controller.builder->CreateIntCast(Controller.builder->getInt32(5), Controller.builder->getInt32Ty(), false));
