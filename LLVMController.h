@@ -33,15 +33,15 @@ class LLVMController {
     
     void callFunction(llvm::Function* fn, std::vector<llvm::Value*> args);
 
-    // llvm::Value* getFromScope(std::string name);
+    // // llvm::Value* getFromScope(std::string name);
 
-    // variables
+    // // variables
     llvm::AllocaInst* declareVariable(std::string name, llvm::Type* type);
-    llvm::StoreInst* assignVariable(llvm::AllocaInst*, llvm::Value* value);
-    llvm::LoadInst* getVariable(llvm::AllocaInst* allocaInst, llvm::Type* type);
+    llvm::StoreInst* assignVariable(llvm::AllocaInst* ref, llvm::Value* value);
+    llvm::LoadInst* getVariable(llvm::AllocaInst* ref);
 
     // arrays
     llvm::AllocaInst* declareArray(std::string name, llvm::Type* type, llvm::Value* size);
-    llvm::StoreInst* assignArray(llvm::AllocaInst* allocaInst, llvm::Value* index, llvm::Value* value); // get index type from index->getType();
-    llvm::LoadInst* getArray(llvm::AllocaInst* allocaInst, llvm::Value* index, llvm::Type* type);
+    llvm::StoreInst* assignArray(llvm::AllocaInst* ref, llvm::Value* index, llvm::Value* value); 
+    llvm::LoadInst* getArray(llvm::AllocaInst* ref, llvm::Value* index, llvm::Type* type);
 };

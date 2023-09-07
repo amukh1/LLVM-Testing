@@ -11,7 +11,7 @@
 
 #include <iostream>
 
-#include "LLVMController.h"
+#include "./LLVMController.h"
 
 // using namespace llvm;
 
@@ -48,13 +48,17 @@ int main() {
  auto string = Controller.builder->CreateGlobalStringPtr("Hello World! Almost %d years of programming!\n");
  auto printfn = Controller.module->getFunction("printf");
 
- llvm::Type *type = llvm::Type::getInt32Ty(Controller.ctx);
- llvm::AllocaInst* llvm_alloca_inst = Controller.builder->CreateAlloca(Controller.builder->getInt32Ty(), nullptr, "a");
- llvm::StoreInst* llvm_store_inst = Controller.builder->CreateStore(Controller.builder->getInt32(5), llvm_alloca_inst);
- // get value ptr
-llvm::LoadInst* llvm_load_inst = Controller.builder->CreateLoad(Controller.builder->getInt32Ty(),llvm_alloca_inst);
+//  llvm::Type *type = llvm::Type::getInt32Ty(Controller.ctx);
+//  llvm::AllocaInst* llvm_alloca_inst = Controller.builder->CreateAlloca(Controller.builder->getInt32Ty(), nullptr, "a");
+//  llvm::StoreInst* llvm_store_inst = Controller.builder->CreateStore(Controller.builder->getInt32(5), llvm_alloca_inst);
+//  // get value ptr
+// llvm::LoadInst* llvm_load_inst = Controller.builder->CreateLoad(Controller.builder->getInt32Ty(),llvm_alloca_inst);
 
- Controller.builder->CreateCall(printfn, {string, llvm_load_inst});
+ auto varPtr = Controller.declareVariable("variable", Controller.builder->getInt32Ty());
+ Controller.assignVariable(varPtr, Controller.builder->getInt32(5));
+ auto var = Controller.getVariable(varPtr);
+
+ Controller.builder->CreateCall(printfn, {string, var});
  string->setName("string");
 
  // arrays

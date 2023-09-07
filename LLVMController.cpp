@@ -39,10 +39,37 @@ llvm::BasicBlock* LLVMController::defineFunction(std::string name) {
     return entry;
 }
 
-llvm::Value* LLVMController::getFromScope(std::string name) {
-    llvm::Value* value = this->globalScope[name];
-    if(value == nullptr) {
-        return nullptr;
-    }
-    return value;
+llvm::AllocaInst* LLVMController::declareVariable(std::string name, llvm::Type* type) {
+  return this->builder->CreateAlloca(type, nullptr, name);
 }
+
+llvm::StoreInst* LLVMController::assignVariable(llvm::AllocaInst* ref, llvm::Value* value) {
+  return this->builder->CreateStore(value, ref);
+}
+
+llvm::LoadInst* LLVMController::getVariable(llvm::AllocaInst* ref) {
+  return this->builder->CreateLoad(ref->getAllocatedType(),ref);
+}
+
+
+llvm::AllocaInst* LLVMController::declareArray(std::string name, llvm::Type* type, llvm::Value* size) {
+  return this->builder->CreateAlloca(type, size, name);
+}
+
+llvm::StoreInst* LLVMController::assignArray(llvm::AllocaInst* ref, llvm::Value* index, llvm::Value* value) {
+  llvm::Value* ptr = this->builder->CreateGEP(index->getType(), ref, index);
+  return this->builder->CreateStore(value, ptr);
+}
+
+llvm::LoadInst* LLVMController::getArray(llvm::AllocaInst* ref, llvm::Value* index, llvm::Type* type) {
+  llvm::Value* ptr = this->builder->CreateGEP(ref->getAllocatedType(), ref, index);
+return this->builder->CreateLoad(type, ptr);
+}
+
+// llvm::Value* LLVMController::getFromScope(std::string name) {
+//     llvm::Value* value = this->globalScope[name];
+//     if(value == nullptr) {
+//         return nullptr;
+//     }
+//     return value;
+// }

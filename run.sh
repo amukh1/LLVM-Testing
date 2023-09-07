@@ -1,4 +1,4 @@
-g++ index.cpp LLVMController.cpp -o index `llvm-config-14 --cflags --libs`
+g++ index.cpp LLVMController.cpp -o index `llvm-config --cflags --libs`
 
 ./index
 
