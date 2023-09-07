@@ -52,12 +52,32 @@ int main() {
  llvm::AllocaInst* llvm_alloca_inst = Controller.builder->CreateAlloca(Controller.builder->getInt32Ty(), nullptr, "a");
  llvm::StoreInst* llvm_store_inst = Controller.builder->CreateStore(Controller.builder->getInt32(5), llvm_alloca_inst);
  // get value ptr
-llvm::LoadInst* llvm_load_inst = Controller.builder->CreateLoad(Controller.builder->getInt32Ty(),llvm_alloca_inst, "a");
+llvm::LoadInst* llvm_load_inst = Controller.builder->CreateLoad(Controller.builder->getInt32Ty(),llvm_alloca_inst);
 
  Controller.builder->CreateCall(printfn, {string, llvm_load_inst});
  string->setName("string");
 
- Controller.builder->CreateRet(Controller.builder->CreateIntCast(Controller.builder->getInt32(5), Controller.builder->getInt32Ty(), false));
+ // arrays
+
+    // llvm::ArrayType* arrayType = llvm::ArrayType::get(Controller.builder->getInt32Ty(), 5);
+    llvm::Value* arraySize = Controller.builder->getInt32(5);
+    llvm::AllocaInst* llvm_alloca_instArr = Controller.builder->CreateAlloca(Controller.builder->getInt32Ty(), arraySize, "arr");
+    
+    // store in index 2 of array, 5
+    llvm::Value* index = Controller.builder->getInt32(2);
+    llvm::Value* value = Controller.builder->getInt32(5);
+    llvm::Value* ptr = Controller.builder->CreateGEP(index->getType(), llvm_alloca_instArr, index);
+    llvm::StoreInst* llvm_store_instArr = Controller.builder->CreateStore(value, ptr);
+
+    // load 
+    ptr = Controller.builder->CreateGEP(Controller.builder->getInt32Ty(), llvm_alloca_instArr, index);
+    llvm::LoadInst* llvm_load_instArr = Controller.builder->CreateLoad(Controller.builder->getInt32Ty(), ptr);
+
+    // print
+
+    Controller.builder->CreateCall(printfn, {string, llvm_load_instArr});
+
+ Controller.builder->CreateRet(Controller.builder->CreateIntCast(Controller.builder->getInt32(0), Controller.builder->getInt32Ty(), false));
 
 // out
  llvm::outs() << *Controller.module << '\n';
